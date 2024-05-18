@@ -12,6 +12,15 @@ export class BookRepository implements IBookRepository {
     private readonly repository: Repository<BookEntity>,
   ) {}
 
+  async findBookById(id: number): Promise<BookEntity> {
+    try {
+      return this.repository.findOne({ where: { id } });
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
+  }
+
   async findAllUnAvailableBooks(): Promise<BookEntity[]> {
     try {
       return this.repository
@@ -42,6 +51,7 @@ export class BookRepository implements IBookRepository {
       throw error;
     }
   }
+
   async insertBook(payload: BookAddDto): Promise<BookEntity> {
     const requestPayload = new BookEntity();
     requestPayload.code = payload.code;

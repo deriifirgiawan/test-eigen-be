@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MemberEntity } from 'src/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,25 +13,48 @@ export class Memberepository implements IMemberRepository {
   ) {}
 
   async findAllMemberWithBorrowed(): Promise<any[]> {
-    return this.repository
-      .createQueryBuilder('member')
-      .leftJoin('member.borrow', 'borrow')
-      .select('member.code', 'code')
-      .addSelect('member.id', 'member_id')
-      .addSelect('member.name', 'name')
-      .addSelect('COUNT(borrow.id)', 'borrowed_books_count')
-      .groupBy('member.code')
-      .addGroupBy('member.id')
-      .addGroupBy('member.name')
-      .getRawMany();
+    try {
+      return this.repository
+        .createQueryBuilder('member')
+        .leftJoin('member.borrow', 'borrow')
+        .select('member.code', 'code')
+        .addSelect('member.id', 'member_id')
+        .addSelect('member.name', 'name')
+        .addSelect('COUNT(borrow.id)', 'borrowed_books_count')
+        .groupBy('member.code')
+        .addGroupBy('member.id')
+        .addGroupBy('member.name')
+        .getRawMany();
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
-  createMember(payload: MemberAddDto): Promise<MemberEntity> {
-    return this.repository.save(payload);
+
+  async createMember(payload: MemberAddDto): Promise<MemberEntity> {
+    try {
+      return this.repository.save(payload);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
-  findAllMember(): Promise<MemberEntity[]> {
-    return this.repository.find();
+
+  async findAllMember(): Promise<MemberEntity[]> {
+    try {
+      return this.repository.find();
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
-  findMemberById(id: number): Promise<MemberEntity> {
-    return this.repository.findOne({ where: { id } });
+
+  async findMemberById(id: number): Promise<MemberEntity> {
+    try {
+      return this.repository.findOne({ where: { id } });
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
   }
 }
