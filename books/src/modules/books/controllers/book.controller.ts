@@ -11,7 +11,7 @@ import { BookService } from '../services/book.service';
 import { ResponseStatusCode } from 'src/decorators';
 import { BookAllQueryDto } from '../dto';
 
-@ApiTags('Books')
+@ApiTags('Book')
 @Controller('book')
 export class BookController {
   constructor(
@@ -24,7 +24,7 @@ export class BookController {
   @ApiOperation({
     summary: 'End Point for Get All Books',
     description:
-      'This end point has 1 query params, namely available, if you dont fill in anything or you fill the value false so as default will returned all of books, but if you fill in value true, Shows all existing books and quantities',
+      'This endpoint has 1 query parameter, which is available, if nothing is filled in or the value is true then by default it will return all books, but if the value is filled in false, displays all the books and the amount available',
   })
   async getAllBooks(
     @Query()
@@ -36,6 +36,10 @@ export class BookController {
 
       if (String(available) === 'true' && available !== undefined) {
         response = await this.bookService.getAllAvailableBooks();
+      }
+
+      if (String(available) === 'false' && available !== undefined) {
+        response = await this.bookService.getAllUnAvailableBooks();
       }
       return this.responseService.success('Success Get All Books', response);
     } catch (error) {

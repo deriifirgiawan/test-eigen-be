@@ -11,6 +11,24 @@ export class BookService implements IBookService {
     private readonly bookRepository: IBookRepository,
   ) {}
 
+  async getAllUnAvailableBooks(): Promise<BookEntity[]> {
+    try {
+      const books = await this.bookRepository.findAllUnAvailableBooks();
+
+      return books.map((book: BookEntity) => {
+        return {
+          id: book.id,
+          author: book.author,
+          title: book.author,
+          stock: book.stock,
+        };
+      }) as BookEntity[];
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
+  }
+
   async getAllBooks(): Promise<BookEntity[]> {
     try {
       return await this.bookRepository.findAllBooks();
@@ -31,7 +49,16 @@ export class BookService implements IBookService {
 
   async getAllAvailableBooks(): Promise<BookEntity[]> {
     try {
-      return await this.bookRepository.findAllAvailableBooks();
+      const books = await this.bookRepository.findAllAvailableBooks();
+
+      return books.map((book: BookEntity) => {
+        return {
+          id: book.id,
+          author: book.author,
+          title: book.author,
+          stock: book.stock,
+        };
+      }) as BookEntity[];
     } catch (error) {
       Logger.error(error);
       throw error;

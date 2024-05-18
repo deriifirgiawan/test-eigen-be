@@ -3,6 +3,7 @@ import { BookAddDto } from '../../dto';
 
 export interface IBookService {
   getAllAvailableBooks(): Promise<BookEntity[]>;
+  getAllUnAvailableBooks(): Promise<BookEntity[]>;
   getAllBooks(): Promise<BookEntity[]>;
   addBook(payload: BookAddDto): Promise<BookEntity>;
 }

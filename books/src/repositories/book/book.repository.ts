@@ -12,9 +12,31 @@ export class BookRepository implements IBookRepository {
     private readonly repository: Repository<BookEntity>,
   ) {}
 
+  async findAllUnAvailableBooks(): Promise<BookEntity[]> {
+    try {
+      return this.repository
+        .createQueryBuilder('book')
+        .select(['book.id', 'book.author', 'book.title', 'book.stock'])
+        .leftJoinAndSelect('book.borrow', 'borrow')
+        .where('borrow.id IS NOT NULL')
+        .getMany();
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
+  }
+
   async findAllBooks(): Promise<BookEntity[]> {
     try {
-      return this.repository.find();
+      return this.repository.find({
+        select: {
+          id: true,
+          author: true,
+          code: true,
+          stock: true,
+          borrow: null,
+        },
+      });
     } catch (error) {
       Logger.error(error);
       throw error;
@@ -38,6 +60,7 @@ export class BookRepository implements IBookRepository {
     try {
       return this.repository
         .createQueryBuilder('book')
+        .select(['book.id', 'book.author', 'book.title', 'book.stock'])
         .leftJoinAndSelect('book.borrow', 'borrow')
         .where('borrow.id IS NULL')
         .getMany();
