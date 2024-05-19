@@ -37,3 +37,22 @@ or
 ```bash
 npm start:dev
 ```
+
+## Test End Points
+
+You can test end point the application from Swagger & jest unit test.
+
+Swagger:
+[Swagger](http://localhost:3000/api-docs#/)
+
+Jest:
+
+```bash
+yarn test
+```
+
+or
+
+```bash
+npm run test
+```
