@@ -1,6 +1,7 @@
 import { Controller, Post } from '@nestjs/common';
 import { SeedService } from './seeds.service';
 import { BookService } from 'src/modules/books/services/book.service';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller({ path: 'seeds' })
 export class SeedsController {
@@ -10,6 +11,7 @@ export class SeedsController {
   ) {}
 
   @Post()
+  @ApiExcludeEndpoint()
   async create() {
     try {
       const books = await this.bookService.getAllAvailableBooks();
