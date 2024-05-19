@@ -11,6 +11,15 @@ export class BookService implements IBookService {
     private readonly bookRepository: IBookRepository,
   ) {}
 
+  async getBookByCode(code: string): Promise<BookEntity> {
+    try {
+      return await this.bookRepository.findBookByCode(code);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
+  }
+
   async getAllUnAvailableBooks(): Promise<BookEntity[]> {
     try {
       const books = await this.bookRepository.findAllUnAvailableBooks();

@@ -8,6 +8,7 @@ import { BookModule } from './modules/books/book.module';
 import { ResponseModule } from './modules/response';
 import { MemberModule } from './modules/member/member.module';
 import { SeedsModule } from './seeds/seeds.module';
+import { BorrowModule } from './modules/borrow/borrow.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SeedsModule } from './seeds/seeds.module';
     SeedsModule,
     BookModule,
     MemberModule,
+    BorrowModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,8 +1,14 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { MemberEntity } from 'src/entities';
 import { IMemberService } from './interfaces/member.interface';
 import { IMemberRepository } from 'src/repositories/member/member.interface';
 import { MemberAddDto, MemberResponseBorrowedDto } from '../dto';
+import { addDays } from 'src/utils';
 
 @Injectable()
 export class MemberService implements IMemberService {
@@ -10,6 +16,34 @@ export class MemberService implements IMemberService {
     @Inject('IMemberRepository')
     private readonly repository: IMemberRepository,
   ) {}
+
+  async penalizeMember(
+    member_id: number,
+    status: boolean,
+  ): Promise<MemberEntity> {
+    try {
+      const member = await this.getMemberById(member_id);
+      if (!member) {
+        throw new BadRequestException('Member Not Found');
+      }
+
+      member.is_penalized = status;
+      member.penalty_end_date = status ? addDays(new Date(), 3) : null;
+      return await this.repository.createMember(member);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
+  }
+
+  async getMemberByCode(code: string): Promise<MemberEntity> {
+    try {
+      return this.repository.findMemberByCode(code);
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
+  }
 
   async getAllMemberBorrowedCount(): Promise<MemberResponseBorrowedDto[]> {
     try {
@@ -42,7 +76,14 @@ export class MemberService implements IMemberService {
 
   async getAllMember(): Promise<MemberEntity[]> {
     try {
-      return this.repository.findAllMember();
+      const response = await this.repository.findAllMember();
+      return response.map((value) => {
+        return {
+          id: value.id,
+          code: value.code,
+          name: value.name,
+        };
+      });
     } catch (error) {
       Logger.error(error);
       throw error;

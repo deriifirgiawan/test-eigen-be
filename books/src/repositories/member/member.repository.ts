@@ -6,11 +6,20 @@ import { IMemberRepository } from './member.interface';
 import { MemberAddDto } from 'src/modules/member/dto';
 
 @Injectable()
-export class Memberepository implements IMemberRepository {
+export class MemberRepository implements IMemberRepository {
   constructor(
     @InjectRepository(MemberEntity)
     private readonly repository: Repository<MemberEntity>,
   ) {}
+
+  async findMemberByCode(code: string): Promise<MemberEntity> {
+    try {
+      return this.repository.findOne({ where: { code } });
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
+  }
 
   async findAllMemberWithBorrowed(): Promise<any[]> {
     try {

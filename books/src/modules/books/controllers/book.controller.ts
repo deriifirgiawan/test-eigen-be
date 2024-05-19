@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Response,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { Controller, Get, Query, Response } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResponseService } from 'src/modules/response/response.service';
 import { BookService } from '../services/book.service';
@@ -43,8 +37,7 @@ export class BookController {
       }
       return this.responseService.success('Success Get All Books', response);
     } catch (error) {
-      console.log(error);
-      throw new ServiceUnavailableException(error);
+      throw error;
     }
   }
 }

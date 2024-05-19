@@ -18,6 +18,6 @@ export class BookEntity {
   @Column()
   stock: number;
 
-  @OneToOne(() => BorrowEntity, (borrom) => borrom.book)
+  @OneToOne(() => BorrowEntity, (borrow) => borrow.book)
   borrow?: BorrowEntity;
 }

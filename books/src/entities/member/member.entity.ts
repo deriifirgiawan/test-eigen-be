@@ -12,6 +12,12 @@ export class MemberEntity {
   @Column()
   name: string;
 
+  @Column({ default: false })
+  is_penalized?: boolean;
+
+  @Column({ type: 'timestamp', nullable: true })
+  penalty_end_date?: Date;
+
   @OneToMany(() => BorrowEntity, (borrow) => borrow.member)
   borrow?: BorrowEntity[];
 }

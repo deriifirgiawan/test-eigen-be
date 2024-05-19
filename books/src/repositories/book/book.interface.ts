@@ -6,5 +6,6 @@ export interface IBookRepository {
   findAllUnAvailableBooks(): Promise<BookEntity[]>;
   findAllBooks(): Promise<BookEntity[]>;
   findBookById(id: number): Promise<BookEntity>;
+  findBookByCode(code: string): Promise<BookEntity>;
   insertBook(payload: BookAddDto): Promise<BookEntity>;
 }

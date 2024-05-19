@@ -12,6 +12,15 @@ export class BookRepository implements IBookRepository {
     private readonly repository: Repository<BookEntity>,
   ) {}
 
+  async findBookByCode(code: string): Promise<BookEntity> {
+    try {
+      return this.repository.findOne({ where: { code } });
+    } catch (error) {
+      Logger.error(error);
+      throw error;
+    }
+  }
+
   async findBookById(id: number): Promise<BookEntity> {
     try {
       return this.repository.findOne({ where: { id } });
@@ -23,7 +32,7 @@ export class BookRepository implements IBookRepository {
 
   async findAllUnAvailableBooks(): Promise<BookEntity[]> {
     try {
-      return this.repository
+      return await this.repository
         .createQueryBuilder('book')
         .select(['book.id', 'book.author', 'book.title', 'book.stock'])
         .leftJoinAndSelect('book.borrow', 'borrow')
@@ -37,15 +46,7 @@ export class BookRepository implements IBookRepository {
 
   async findAllBooks(): Promise<BookEntity[]> {
     try {
-      return this.repository.find({
-        select: {
-          id: true,
-          author: true,
-          code: true,
-          stock: true,
-          borrow: null,
-        },
-      });
+      return await this.repository.find();
     } catch (error) {
       Logger.error(error);
       throw error;
@@ -59,7 +60,7 @@ export class BookRepository implements IBookRepository {
     requestPayload.author = payload.author;
     requestPayload.stock = payload.stock;
     try {
-      return this.repository.save(requestPayload);
+      return await this.repository.save(requestPayload);
     } catch (error) {
       Logger.error(error);
       throw error;
@@ -68,7 +69,7 @@ export class BookRepository implements IBookRepository {
 
   async findAllAvailableBooks(): Promise<BookEntity[]> {
     try {
-      return this.repository
+      return await this.repository
         .createQueryBuilder('book')
         .select(['book.id', 'book.author', 'book.title', 'book.stock'])
         .leftJoinAndSelect('book.borrow', 'borrow')
